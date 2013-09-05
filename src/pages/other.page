@@ -1,0 +1,13 @@
+<apex:page controller="OtherController">
+  <h1>Products</h1>
+    <apex:form >
+        <apex:dataTable value="{!Products}" var="product">
+            <apex:column headerValue="Product">
+                <apex:outputField value="{!product.Name}"/>          
+            </apex:column>
+            <apex:column headerValue="Product COde">
+                <apex:outputField value="{!product.ProductCode}" />
+            </apex:column>
+        </apex:dataTable>
+    </apex:form>
+</apex:page>
