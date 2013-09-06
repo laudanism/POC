@@ -1,13 +1,19 @@
 <apex:page controller="OtherController">
-  <h1>Products</h1>
-    <apex:form >
-        <apex:dataTable value="{!Products}" var="product">
-            <apex:column headerValue="Product">
-                <apex:outputField value="{!product.Name}"/>          
+   <apex:form >
+    <apex:pageBlock title="Products">
+        <apex:pageBlockTable value="{!Products}" var="product">
+            <apex:column headerValue="">
+                <apex:inputCheckbox value="{!IsChecked}"/>
+            </apex:column>            
+            <apex:column headerValue="Product" value="{!product.Name}">
             </apex:column>
-            <apex:column headerValue="Product COde">
-                <apex:outputField value="{!product.ProductCode}" />
+            <apex:column headerValue="Product Code" value="{!product.ProductCode}">
             </apex:column>
-        </apex:dataTable>
+            <apex:column headerValue="List Price" value="{!product.Price__c}">
+            </apex:column>
+            <apex:column headerValue="Product Description" value="{!product.Description}">
+            </apex:column>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
     </apex:form>
 </apex:page>

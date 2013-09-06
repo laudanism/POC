@@ -1,5 +1,7 @@
 public with sharing class OtherController {
-        
+    
+    public Boolean IsChecked { get; set; }
+    
     public List<Product2> ProductsList
     {
         get
