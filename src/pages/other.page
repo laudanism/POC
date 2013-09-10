@@ -1,19 +1,61 @@
 <apex:page controller="OtherController">
+   
+    <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js')}"  />   
+    <script type="text/javascript">
+    $j = jQuery.noConflict();
+    
+     $j(document).ready(function() {
+            
+        }
+    );
+    function doSomething() {
+        OtherController.GetPrice(
+            function(result, event) 
+            {
+              if(event.type === 'exception') 
+              {
+                return "Not available";
+              } else if (event.status) 
+              {
+                var spanArray = $j('.productPrice');
+                for(var i=0; i<spanArray.length; i++)
+                {
+                    spanArray[i].innerText = result;
+                }
+              } else {
+                return event.message;
+              }
+            }
+        );
+    }
+    </script>   
    <apex:form >
-    <apex:pageBlock title="Products">
-        <apex:pageBlockTable value="{!Products}" var="product">
-            <apex:column headerValue="">
-                <apex:inputCheckbox value="{!IsChecked}"/>
-            </apex:column>            
-            <apex:column headerValue="Product" value="{!product.Name}">
-            </apex:column>
-            <apex:column headerValue="Product Code" value="{!product.ProductCode}">
-            </apex:column>
-            <apex:column headerValue="List Price" value="{!product.Price__c}">
-            </apex:column>
-            <apex:column headerValue="Product Description" value="{!product.Description}">
-            </apex:column>
-        </apex:pageBlockTable>
-    </apex:pageBlock>
+       
+   </apex:form>
+   
+   <apex:form id="frmMain">
+       <apex:pageBlock title="Search">
+            <apex:inputText value="{!SearchCriteria}" id="textInput"/>
+            <apex:commandButton value="Search" reRender="productsPageBlock" action="{!SearchProduct}"/>       
+       </apex:pageBlock>
+        <apex:pageBlock title="Products" id="productsPageBlock">
+            <apex:pageBlockTable value="{!ProductsList}" var="product" id="table" >
+                <apex:column headerValue="">
+                    <apex:inputCheckbox value="{!IsChecked}"/>
+                </apex:column>            
+                <apex:column headerValue="Product" value="{!product.Name}">
+                </apex:column>
+                <apex:column headerValue="Product Code" value="{!product.ProductCode}">
+                </apex:column>
+                <apex:column headerValue="List Price" >
+                    <span class="productPrice"></span>                
+                </apex:column>
+                <apex:column headerValue="Product Description" value="{!product.Description}">
+                </apex:column>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
     </apex:form>
+    <script>
+        doSomething();
+    </script>
 </apex:page>
