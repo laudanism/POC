@@ -33,6 +33,7 @@
         <apex:pageBlock title="Products" id="productsPageBlock">
             <apex:pageBlockButtons >                
                 <apex:commandButton value="Prev" reRender="productsPageBlock" action="{!GetPrev}"/>
+                <apex:outputLabel value="{!PageNumber}"></apex:outputLabel>
                 <apex:commandButton value="Next" reRender="productsPageBlock" action="{!GetNext}"/>
             </apex:pageBlockButtons>
             <apex:outputLabel id="errorSpace"/>

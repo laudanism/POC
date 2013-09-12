@@ -1,12 +1,19 @@
 global with sharing class OtherController
 {
-  private Integer PAG_LIMIT = 10;
-  private Integer OFFSET = 0;
+	private Paginator paginator;
+    private Integer PAGE_LIMIT = 5;
 
     public String SearchCriteria
     {
         get;
         set;
+    }
+    public Integer PageNumber
+    {
+    	get
+    	{
+    		return paginator.PageNumber;
+    	}
     }
 
     public Boolean IsChecked
@@ -15,38 +22,17 @@ global with sharing class OtherController
         set;
     }
 
-    public Integer TotalRecords
-    {
-      get;
-      set;
-    }
-
     public List<Product2> ProductsList
     {
         get;
         set;
     }
-    public Integer PageNumber
-    {
-    	get;
-    	set;
-    }
-    public Boolean HasNext {
-        get {
-            if(OFFSET < TotalRecords)
-                return true;
-            return false;
-        }
-        private set;
-    }
 
     public OtherController()
     {
-        String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 limit ' + PAG_LIMIT + 'OFFSET ' + OFFSET;
-        OFFSET += PAG_LIMIT;
+        String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 limit ' + PAGE_LIMIT;
         ProductsList = ExecuteQuery(query);
-        PageNumber = 1;
-        SetNumberRows();
+        paginator = new Paginator(PAGE_LIMIT, GetNumberRows());
     }
 
     /**
@@ -66,28 +52,22 @@ global with sharing class OtherController
 
     public void GetNext()
     {
-        if(HasNext)
+        if(paginator.HasNext)
         {
-            String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 limit ' + PAG_LIMIT + 'OFFSET ' + OFFSET;
+        	String pages = paginator.Next();
+            String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 ' + pages;
             ProductsList = ExecuteQuery(query);
-            OFFSET += PAG_LIMIT;
-            PageNumber += 1;
-            return;
         }
-
     }
 
     public void GetPrev()
     {
-        if(OFFSET > 0)
+        if(paginator.HasPrev)
         {
-            OFFSET -= PAG_LIMIT;
-            String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 limit ' + PAG_LIMIT + 'OFFSET ' + OFFSET;
+            String pages = paginator.Prev();
+            String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 ' + pages;
             ProductsList = ExecuteQuery(query);
-            PageNumber -= 1;
-            return;
         }
-        HasNext = false;
     }
 
     private List<sObject> ExecuteQuery(string query)
@@ -97,10 +77,9 @@ global with sharing class OtherController
         return resultList;
     }
 
-    private void SetNumberRows()
+    private Integer GetNumberRows()
     {
-        Integer nRows = [Select COUNT() From Product2];
-        TotalRecords = nRows;
+        return [Select COUNT() From Product2];
     }
 
     @RemoteAction
