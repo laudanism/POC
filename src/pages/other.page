@@ -1,4 +1,4 @@
-<apex:page controller="OtherController">
+<apex:page controller="OtherController" id="page">
 
     <apex:includeScript value="{!URLFOR($Resource.jQuery, '/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js')}"  />
     <script type="text/javascript">
@@ -6,35 +6,58 @@
 
     function getPriceList() {
         var spanArray = $j('.productPrice');
-        OtherController.GetPrice(
-            function(result, event)
-            {
-                if(event.status)
-                {
-                    var spanArray = $j('.productPrice');
-                    for(var i=0; i<spanArray.length; i++)
-                    {
+
+        Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.OtherController.GetPrice}',
+        function(result, event){
+            if (event.status) {
+                var spanArray = $j('.productPrice');
+                    for(var i=0; i<spanArray.length; i++) {
                         spanArray[i].innerText = result;
                     }
-                } else
-                {
-                    $j('errorSpace').innerHtml = event.message;
-                }
+            } else if (event.type === 'exception') {
+                $j('errorSpace').innerHtml = event.message;
+            } else {
+                $j('errorSpace').innerHtml = event.message;
             }
-        );
+        },
+        {escape: true}
+    );
     }
+
+    function getPrices(elId) {
+        Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.OtherController.GetPrice2}',
+        elId,
+        function(result, event){
+            if (event.status) {
+                var priceField = document.getElementById(result.split("@@")[1]);
+                priceField.innerHTML = result.split("@@")[0];
+            } else if (event.type === 'exception') {
+                $j('errorSpace').innerHtml = event.message;
+            } else {
+                $j('errorSpace').innerHtml = event.message;
+            }
+        },
+        {escape: true}
+    );
+    }
+
+
     </script>
 
    <apex:form id="frmMain">
-       <apex:pageBlock title="Search">
-            <apex:inputText value="{!SearchCriteria}" id="textInput"/>
-            <apex:commandButton value="Search" reRender="productsPageBlock" action="{!SearchProduct}"/>
-       </apex:pageBlock>
+        <apex:actionRegion >
+            <apex:pageBlock title="Search">
+                <apex:inputText value="{!SearchCriteria}" id="textInput"/>
+                <apex:commandButton value="Search" reRender="frmMain" action="{!SearchProduct}"/>
+            </apex:pageBlock>
+        </apex:actionRegion>
         <apex:pageBlock title="Products" id="productsPageBlock">
-            <apex:pageBlockButtons >                
-                <apex:commandButton value="Prev" reRender="productsPageBlock" action="{!GetPrev}"/>
-                <apex:outputLabel value="{!PageNumber}"></apex:outputLabel>
-                <apex:commandButton value="Next" reRender="productsPageBlock" action="{!GetNext}"/>
+            <apex:pageBlockButtons >
+                    <apex:commandButton value="Prev" reRender="productsPageBlock" action="{!GetPrev}"/>
+                    <apex:outputLabel value="{!PageNumber}"></apex:outputLabel>
+                    <apex:commandButton value="Next" reRender="productsPageBlock" action="{!GetNext}"/>
             </apex:pageBlockButtons>
             <apex:outputLabel id="errorSpace"/>
             <apex:pageBlockTable value="{!ProductsList}" var="product" id="table" >
@@ -46,14 +69,18 @@
                 <apex:column headerValue="Product Code" value="{!product.ProductCode}">
                 </apex:column>
                 <apex:column headerValue="List Price" >
-                    <span class="productPrice"></span>
+                    <apex:outputText value="{!product.Price__c}" styleClass="productPrice" id="listPrice" />
                 </apex:column>
                 <apex:column headerValue="Product Description" value="{!product.Description}">
                 </apex:column>
             </apex:pageBlockTable>
         </apex:pageBlock>
     </apex:form>
-    <script>
-        getPriceList();
-    </script>
+            <script>
+            //getPriceList();
+            for (var i = 0 ; i < $j(".productPrice").length ; i++) {
+                getPrices($j(".productPrice")[i].id);
+            }
+
+        </script>
 </apex:page>

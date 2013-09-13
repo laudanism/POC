@@ -1,6 +1,6 @@
 global with sharing class OtherController
 {
-	private Paginator paginator;
+    private Paginator paginator;
     private Integer PAGE_LIMIT = 5;
 
     public String SearchCriteria
@@ -10,10 +10,10 @@ global with sharing class OtherController
     }
     public Integer PageNumber
     {
-    	get
-    	{
-    		return paginator.PageNumber;
-    	}
+        get
+        {
+            return paginator.PageNumber;
+        }
     }
 
     public Boolean IsChecked
@@ -54,7 +54,7 @@ global with sharing class OtherController
     {
         if(paginator.HasNext)
         {
-        	String pages = paginator.Next();
+            String pages = paginator.Next();
             String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 ' + pages;
             ProductsList = ExecuteQuery(query);
         }
@@ -79,7 +79,7 @@ global with sharing class OtherController
 
     private Integer GetNumberRows()
     {
-        return [Select COUNT() From Product2];
+        return [Select count() From Product2];
     }
 
     @RemoteAction
@@ -88,5 +88,13 @@ global with sharing class OtherController
         Decimal randomNumber = Math.random() * 1000;
         randomNumber = randomNumber.SetScale(2);
         return randomNumber;
+    }
+
+    @RemoteAction
+    global static String GetPrice2(String elId)
+    {
+        Decimal randomNumber = Math.random() * 1000;
+        randomNumber = randomNumber.SetScale(2);
+        return String.valueOf(randomNumber) + '@@' + elId;
     }
 }

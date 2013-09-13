@@ -1,22 +1,58 @@
-@RestResource(urlMapping='/getPrices/')
-global class ServiceRestController 
+@RestResource(urlMapping='/GetPrices/')
+global class ServiceRestController
 {
     @HttpGet
-    global static LIST<Double> GetPrices()
+    global static ResponseWrapper GetPrices()
     {
-    	List<Double> lst;
-    	try
-    	{
-    		Integer i = 0;
-    		while(i < 30)
-    		{
-    			lst.add(Math.random() * 1000);
-    		}
-    	}
-    	catch(Exception e)
-    	{
-    	   system.debug('ERROR: ' + e.getMessage());
-    	}
-    	return lst;
+		try
+		{
+		    List<Double> lst = new List<Double>();
+		    Integer i = 0;
+
+		    Decimal randomNumber = Math.random() * 1000;
+		    lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+            randomNumber = Math.random() * 1000;
+            lst.add(randomNumber.SetScale(2));
+
+            ResponseWrapper res = new ResponseWrapper('true', 'List filled successfully', lst);
+
+            system.DEBUG('>>>>>>>>>>> RES ' + res.Records.get(0));
+		    return res;
+		}
+		catch(Exception e)
+		{
+		    system.debug('ERROR: ' + e.getMessage());
+		    return new ResponseWrapper('false', e.getMessage(), null);
+		}
     }
 }

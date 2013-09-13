@@ -20,7 +20,7 @@ public with sharing class Paginator {
     public Boolean HasNext
     {
         get {
-            if(offset < totalRecords)
+            if(offset < totalRecords && offset >= 0)
             {
                 return true;
             }
@@ -57,9 +57,10 @@ public with sharing class Paginator {
         String query = '';
         if(HasPrev)
         {
-        	Integer offsetToSubstract = (offset >= totalRecords) ? (pagesLimit * 2): pagesLimit;
-        	offset -= offsetToSubstract;
+            Integer offsetToSubstract = (offset >= totalRecords) ? (pagesLimit * 2): pagesLimit;
+            offset -= offsetToSubstract;
             query = 'LIMIT ' + pagesLimit + ' OFFSET ' + offset;
+            system.DEBUG('>>>>>>>>>> QUERY' + query);
             PageNumber -= 1;
 
             return query;

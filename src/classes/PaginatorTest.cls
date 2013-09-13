@@ -50,8 +50,15 @@ private class PaginatorTest {
         system.assert(paginator2.PageNumber == 1);
 
         prevPage = paginator2.Prev();
+        system.DEBUG('-----------paginator 1 ' + paginator2.PageNumber);
+        system.DEBUG('-----------QUERY 2 ' + prevPage);
         system.assert(prevPage == '');
         system.assert(paginator2.PageNumber == 1);
+
+        prevPage = paginator2.Prev();
+        system.DEBUG('-----------paginator 1 ' + paginator2.PageNumber);
+        system.DEBUG('-----------QUERY 2 ' + prevPage);
+
 
     }
 
