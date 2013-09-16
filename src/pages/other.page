@@ -55,9 +55,9 @@
         </apex:actionRegion>
         <apex:pageBlock title="Products" id="productsPageBlock">
             <apex:pageBlockButtons >
-                    <apex:commandButton value="Prev" reRender="productsPageBlock" action="{!GetPrev}"/>
+                    <apex:commandButton value="Prev" reRender="productsPageBlock" action="{!GetPrev}" disabled="{!DisablePrev}"/>
                     <apex:outputLabel value="{!PageNumber}"></apex:outputLabel>
-                    <apex:commandButton value="Next" reRender="productsPageBlock" action="{!GetNext}"/>
+                    <apex:commandButton value="Next" reRender="productsPageBlock" action="{!GetNext}" disabled="{!DisableNext}"/>
             </apex:pageBlockButtons>
             <apex:outputLabel id="errorSpace"/>
             <apex:pageBlockTable value="{!ProductsList}" var="product" id="table" >
@@ -81,6 +81,5 @@
             for (var i = 0 ; i < $j(".productPrice").length ; i++) {
                 getPrices($j(".productPrice")[i].id);
             }
-
         </script>
 </apex:page>

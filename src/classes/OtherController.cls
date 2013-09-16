@@ -1,6 +1,7 @@
 global with sharing class OtherController
 {
     private Paginator paginator;
+    private SearchManager searchManager;
     private Integer PAGE_LIMIT = 5;
 
     public String SearchCriteria
@@ -8,6 +9,23 @@ global with sharing class OtherController
         get;
         set;
     }
+    public boolean DisableNext
+    {
+        get
+        {
+        	return !paginator.HasNext;
+        }
+        private set;
+    }
+    public boolean DisablePrev
+    {
+    	get
+        {
+        	return !paginator.HasPrev;
+        }
+        private set;
+    }
+
     public Integer PageNumber
     {
         get
@@ -16,10 +34,10 @@ global with sharing class OtherController
         }
     }
 
-    public Boolean IsChecked
+    public boolean IsChecked
     {
-        get;
-        set;
+    	get;
+    	set;
     }
 
     public List<Product2> ProductsList
@@ -31,8 +49,10 @@ global with sharing class OtherController
     public OtherController()
     {
         String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 limit ' + PAGE_LIMIT;
+        ProductsList = new List<Product2>();
         ProductsList = ExecuteQuery(query);
         paginator = new Paginator(PAGE_LIMIT, GetNumberRows());
+        searchManager = new SearchManager(PAGE_LIMIT);
     }
 
     /**
@@ -46,12 +66,20 @@ global with sharing class OtherController
 
     public void SearchProduct()
     {
-        String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 WHERE Name LIKE \'%' + SearchCriteria + '%\'';
-        ProductsList = ExecuteQuery(query);
+        //String query = 'SELECT Product2.Name, Product2.ProductCode, Price__c, Product2.Description FROM Product2 WHERE Name LIKE \'%' + SearchCriteria + '%\'';
+        //ProductsList = ExecuteQuery(query);
+        searchManager.Reset();
+        searchManager.SearchQuery(SearchCriteria);
+        ProductsList = searchManager.GetNextBlock();
     }
 
     public void GetNext()
     {
+    	if(SearchCriteria != '')
+    	{
+            ProductsList = searchManager.GetNextBlock();
+            return;
+    	}
         if(paginator.HasNext)
         {
             String pages = paginator.Next();
@@ -62,6 +90,11 @@ global with sharing class OtherController
 
     public void GetPrev()
     {
+    	if(SearchCriteria != '')
+        {
+            ProductsList = searchManager.GetPrevBlock();
+            return;
+        }
         if(paginator.HasPrev)
         {
             String pages = paginator.Prev();

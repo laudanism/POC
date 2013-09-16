@@ -1,4 +1,5 @@
-public with sharing class Paginator {
+public with sharing class Paginator
+{
 
     private Integer pagesLimit;
     private Integer offset;
@@ -19,7 +20,8 @@ public with sharing class Paginator {
     }
     public Boolean HasNext
     {
-        get {
+        get
+        {
             if(offset < totalRecords && offset >= 0)
             {
                 return true;
@@ -31,7 +33,7 @@ public with sharing class Paginator {
     public Boolean HasPrev
     {
         get {
-            if(offset > 0)
+            if(offset > 0 && PageNumber != 1)
             {
                 return true;
             }
