@@ -58,8 +58,17 @@ private class PaginatorTest {
         prevPage = paginator2.Prev();
         system.DEBUG('-----------paginator 1 ' + paginator2.PageNumber);
         system.DEBUG('-----------QUERY 2 ' + prevPage);
+    }
 
+    static testMethod void resetTest()
+    {
+    	Integer pageLimit = 5;
+        Integer offset = 15;
 
+        Paginator paginator = new Paginator(5, 10);
+        String nextResult = paginator.Next();
+        paginator.Reset(7);
+        system.assert(paginator.PageNumber == 0);
     }
 
 

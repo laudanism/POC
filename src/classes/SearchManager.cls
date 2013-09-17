@@ -11,7 +11,25 @@ public with sharing class SearchManager {
     		return results.size();
     	}
     }
-
+    
+    public Boolean HasNext
+    {
+    	get
+    	{
+    		return index < results.size();
+    	}
+    	set;
+    }
+    
+    public Boolean HasPrev
+    {
+    	get
+        {
+        	return index > 0;
+        }
+        set;
+    }
+    
     public SearchManager(Integer blockSize)
     {
     	results = new List<Product2>();

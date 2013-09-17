@@ -16,7 +16,7 @@ public with sharing class Paginator
     public Integer PageNumber
     {
         get;
-        private set;
+        set;
     }
     public Boolean HasNext
     {
@@ -62,12 +62,18 @@ public with sharing class Paginator
             Integer offsetToSubstract = (offset >= totalRecords) ? (pagesLimit * 2): pagesLimit;
             offset -= offsetToSubstract;
             query = 'LIMIT ' + pagesLimit + ' OFFSET ' + offset;
-            system.DEBUG('>>>>>>>>>> QUERY' + query);
             PageNumber -= 1;
 
             return query;
         }
         HasNext = false;
         return query;
+    }
+
+    public void Reset(Integer records)
+    {
+        offset = 0;
+        PageNumber = 0;
+        totalRecords = records;
     }
 }

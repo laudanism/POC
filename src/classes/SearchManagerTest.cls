@@ -35,4 +35,13 @@ private class SearchManagerTest {
         List<sObject> result = manager.GetPrevBlock();
         system.assertNotEquals(null, result);
     }
+
+    static testMethod void Trial()
+    {
+    	List<sObject> result = [SELECT Name FROM Product2 WHERE Name like '%ge%' limit 3 OFFSET 8];
+        for(sObject o : result)
+        {
+            system.DEBUG('>>>>>>>>> O: ' + o);
+        }
+    }
 }
